@@ -1,6 +1,8 @@
 <html>
 <head>
-
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>ROP</title>
 </head>
 <style>
 	html{
@@ -18,16 +20,26 @@
 		background-image: url('DirtPlatform.png');
 	}
 	#fold{
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
 		width:256px;
 		height:160px;
 		background-color:grey;
 		overflow:hidden;
 		margin:0px;
+
+
+
 		zoom: 400%;
 		-ms-zoom: 4;
 		-webkit-zoom: 4;
 		transform-origin: top left;
 		-moz-transform: scale(4);
+		
+		
 		background-image: url('mansionBackdrop.png');
 		/* IE, only works on <img> tags */
 	   -ms-interpolation-mode: nearest-neighbor;
@@ -35,6 +47,14 @@
 	   image-rendering: crisp-edges;
 	   /* Chromium + Safari */
 	   image-rendering: pixelated;
+	}
+	
+	#fold.3{
+		zoom: 100%;
+		-ms-zoom: 1;
+		-webkit-zoom: 1;
+		transform-origin: top left;
+		-moz-transform: scale(1);
 	}
 	
 	@-webkit-keyframes playerWalkRight {
@@ -428,9 +448,72 @@
 		font-family: "ROP";
 		position: absolute;
 	}
+	
+	.button{
+		border: 4px solid #ffffff;
+		font-family: "ROP";
+		width: 20vw;
+		height: 20vw;
+		margin-top: 25px;
+		text-align: center;
+		vertical-align: middle;
+		color: white;
+		font-size: 10vw;
+		font-family: "ROP";
+		padding-top: 6vw;
+		float: left;
+		opacity: 0.35;
+		z-index: 99999999;
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+		position: sticky
+	}
+	.spacer{
+		position: sticky
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+		width: 15vw;
+		height: 15vw;
+		float: left;
+		  height: auto;
+		  position: relative;
+	}
+	.disable-dbl-tap-zoom {
+	  touch-action: manipulation;
+	}
+	.zoomPanel{
+		z-index: 99999999;
+		width: 100%; /* Can be in percentage also. */
+		height: auto;
+		margin: 0 auto;
+		padding: 10px;
+		position: relative;
+		opacity: 0.35;
+	} 	
+	.selector{
+		z-index: 999999999;
+		font-family: "ROP";
+		font-size: 2vw;
+		margin-top: 1.5vw;
+		margin-left: 3vw;
+		color: white;
+	}
+	.selector.marginSelector{
+		z-index: 999999999;
+		font-family: "ROP";
+		font-size: 2vw;
+		margin-top: 2.5vw;
+		margin-left: 8vw;
+		color: white;
+	}
 </style>
 <body>
-
 <div id="fold">
 <div id="overlay">
 </div>
@@ -440,6 +523,23 @@
 </div>
 <div style="display:none;" id="dialogPortrait">
 </div>
+</div>
+<div id="touchControls">
+<div id="buttonLeft" class="button disable-dbl-tap-zoom">←</div>
+<div id="buttonRight" class="button disable-dbl-tap-zoom">→</div>
+<div class="spacer disable-dbl-tap-zoom">
+	<div class="zoomPanel">
+		<div onclick="scaleFold(true)" class="selector">↾</div>
+		<div class="selector" id="zoomPercent">400</div>
+		<div onclick="scaleFold(false)" class="selector">⇂</div>
+		<div onclick="marginFold(false)" class="selector marginSelector">↿</div>
+		<div class="selector marginSelector" id="marginGame">0px</div>
+		<div onclick="marginFold(true)" class="selector marginSelector">⇃</div>
+	</div>
+</div>
+<div id="buttonUp" class="button disable-dbl-tap-zoom">↑</div>
+<div id="buttonAction" class="button disable-dbl-tap-zoom">⚔</div>
+
 </div>
 <script>
 
@@ -451,6 +551,9 @@
 	createObject(16,16,26,16,"playerAttack", "transparent", "attackSprite");
 	changeOpacityTo("playerHurt", 0);
 	
+	alternateControls = {};
+	
+	let touchControls = document.getElementById("touchControls");
 	
 	// level design
 	createObject(16,16,216,20,"dirtPlatform1", "transparent", "dirtPlatform");
@@ -510,6 +613,12 @@
 	var playerAirMoveMultiplier = 2;
 	var isPlayerFacingRight = true;
 	
+	var mobileControlCounter = 0;
+	
+	var currentFoldScale = 1;
+	
+	var currentFoldMargin = 0;
+	
 	var playerHealth = 20;
 	var playerMaxHealth = playerHealth;
 	
@@ -520,7 +629,7 @@
     var canShoot = true;
 	
 	var isGameOver = false;
-	var GameOverCounter = 0;
+	var isRedirecting = false;
 	var ReturnScreen = "https://gustavo-batista.online/apps/ropEngine/engine.html";
 	
 	var firingTimer = 35;
@@ -531,9 +640,15 @@
 	var TicksThisSecond = 0;
 	var t=setInterval(clearTicks,1000);
 	var gameloop=setInterval(Update,20);
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const urlScale = urlParams.get('scale');
+	const urlMargin = urlParams.get('margin');
 	
 	AnimationClassTo("player", "animationPlayerLookRight");
 	toggleAndMove("playerAttack", false, 0, 0);
+	
+	RunOnStart();
 	
 	function toggleAndMove(id, isActive, x, y){
 		let ob = document.getElementById(id);
@@ -569,9 +684,130 @@
 		obj.classList.remove("flipped");
 	}
 	
+	function scaleFold(up){
+		let fold = document.getElementById("fold");
+		let step = 0.05;
+		if(up){
+			currentFoldScale += step;
+		}else{
+			currentFoldScale -= step;
+		}
+		fold.style.transform = "scale("+ currentFoldScale +")";
+		document.getElementById("zoomPercent").innerHTML = Math.round((currentFoldScale * 100)) + "%";
+	}
+	
+	function marginFold(up){
+		let controls = document.getElementById("touchControls");
+		let step = 10;
+		if(up){
+			currentFoldMargin += step;
+		}else{
+			currentFoldMargin -= step;
+		}
+		controls.style.marginTop = Math.round(currentFoldMargin) +"px";
+		document.getElementById("marginGame").innerHTML = Math.round(currentFoldMargin ) + "px";
+	}
+	
+	function handleAlternateControls(){
+		alternateControls["action"] = (keys[32] || (mobileControlCounter > 0 && alternateControls["action"]));
+		alternateControls["up"] = (keys[87] || keys[38] || (mobileControlCounter > 0 && alternateControls["up"]));
+		alternateControls["left"] = (keys[65] || keys[37] || (mobileControlCounter > 0 && alternateControls["left"]));
+		alternateControls["right"] = (keys[68] || keys[39] || (mobileControlCounter > 0 && alternateControls["right"]));
+		
+		if(keys[32] || keys[87] || keys[65] || keys[68] || keys[38] || keys[37] ||  keys[39]){
+			touchControls.style.opacity = "0.03"
+		}
+
+		if(mobileControlCounter > 0){
+			mobileControlCounter --;
+		}
+	}
+	
+	function buttonFunction(action, delay){
+		alternateControls[action] = true; 
+		mobileControlCounter = delay;
+	}
+	
+	function RunOnStart(){
+		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+		const butLeft = document.getElementById("buttonLeft");
+		const butRight = document.getElementById("buttonRight");
+		const butUp = document.getElementById("buttonUp");
+		const butAction = document.getElementById("buttonAction");
+		
+		const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+
+		if (isFirefox) {
+		  currentFoldScale = 4;
+		}
+		if(urlScale != null){
+			currentFoldScale = parseInt(urlScale, 10)/100;
+		}
+		if(urlMargin != null){
+			currentFoldMargin = parseInt(urlMargin, 10);
+		}
+		
+		let fold = document.getElementById("fold");
+		fold.style.transform = "scale("+ currentFoldScale +")";
+		document.getElementById("zoomPercent").innerHTML = (currentFoldScale * 100) + "%";
+		
+		let controls = document.getElementById("touchControls");
+		controls.style.marginTop = Math.round(currentFoldMargin) +"px";
+		document.getElementById("marginGame").innerHTML = Math.round(currentFoldMargin ) + "px";
+		
+		butLeft.addEventListener("click", function() {
+			buttonFunction('left', 5);
+		});
+		butRight.addEventListener("click", function() {
+			buttonFunction('right', 5);
+		});
+		butUp.addEventListener("click", function() {
+			buttonFunction('up', 5);
+		});
+		butAction.addEventListener("click", function() {
+			buttonFunction('action', 5);
+		});
+		
+		
+		
+		butLeft.addEventListener("touchstart", function() {
+			buttonFunction('left', 1000000);
+		});
+		butRight.addEventListener("touchstart", function() {
+			buttonFunction('right', 1000000);
+		});
+		butUp.addEventListener("touchstart", function() {
+			buttonFunction('up', 1000000);
+		});
+		butAction.addEventListener("touchstart", function() {
+			buttonFunction('action', 1000000);
+		});
+		
+		
+		butLeft.addEventListener("touchend", function() {
+			buttonFunction('left', 0);
+		});
+		butRight.addEventListener("touchend", function() {
+			buttonFunction('right', 0);
+		});
+		butUp.addEventListener("touchend", function() {
+			buttonFunction('up', 0);
+		});
+		butAction.addEventListener("touchend", function() {
+			buttonFunction('action', 0);
+		});
+	
+		
+		if(vw < 1024){
+			currentFoldScale = currentFoldScale*0.5;
+			fold.style.transform = "scale("+ currentFoldScale +")";
+			document.getElementById("zoomPercent").innerHTML = Math.round((currentFoldScale * 100)) + "%";
+		}
+	}
 
 	function Update(){
 		if(TicksThisSecond < MaxTicks){
+			handleAlternateControls();
 			if(!handlingDialog() && !isGameOver){
 				ApplyGravityToPlayer();
 				HandlePlayerMovement();
@@ -579,11 +815,9 @@
 				HandleEnemyActions();
 			}else if(isGameOver){
 				AnimationClassTo("overlay", "gameOver");
-				if(keys[32]){
-					GameOverCounter++;
-					if(GameOverCounter > 6){
-						window.location.href = ReturnScreen;
-					}
+				if(alternateControls["action"] && !isRedirecting){
+					isRedirecting = true;
+					window.location.href = ReturnScreen + "?scale=" + Math.round(currentFoldScale*100) + "&margin=" + Math.round(currentFoldMargin);
 				}
 			}
 			TicksThisSecond++;
@@ -600,7 +834,7 @@
 			let message = document.getElementById("boxText");
 			let textToUse = (dialogQueue.length > 0) ? dialogQueue[0].message.split(" ") : [];
 			dialogPause--;
-			if(keys[32] && dialogPause <= 0){
+			if(alternateControls["action"] && dialogPause <= 0){
 				if(dialogQueue.length > 1){
 					let voiceUsed = getRandomInt(6)
 					if(voiceUsed == 0) voiceUsed = 3;
@@ -737,28 +971,28 @@
 			
 		if(canMove){
 			
-		  if (keys[87] && isGrounded) {
+		  if (alternateControls["up"] && isGrounded) {
 			playerVerticalSpeed += playerJumpPower;
 			isGrounded = false;
 			currentlyStandingBlock = null;
 			availableSounds["playerJump"].play();
 		  }
-		  if (keys[65]) {
+		  if (alternateControls["left"]) {
 		    AnimationClassTo("player", "animationPlayerLookLeft");
 			isPlayerFacingRight = false;
 			flipObj("playerHurt");
 			AddPlaying("player");
 			LeftValue -= charSpeed * ((isGrounded) ? 1 : playerAirMoveMultiplier );
-		  }else if(keys[68]) {
+		  }else if(alternateControls["right"]) {
 		    AnimationClassTo("player", "animationPlayerLookRight");
 			isPlayerFacingRight = true;
 			unflipObj("playerHurt");
 			AddPlaying("player");
 			LeftValue += charSpeed * ((isGrounded) ? 1 : playerAirMoveMultiplier );
-		  }else if(!keys[68] && !keys[65]){
+		  }else if(!alternateControls["right"] && !alternateControls["left"]){
 			RemovePlaying("player");
 		  }
-		  if(keys[32] && canShoot){
+		  if(alternateControls["action"] && canShoot){
 			ClearAudioCache();
 			if(isPlayerFacingRight){
 				toggleAndMove("playerAttack", true, LeftValue + PlayerWidth, TopValue);
@@ -986,7 +1220,7 @@
 	document.addEventListener("keydown", function(event) {
 		  keys = (keys || []);
 		  keys[event.keyCode]=true;
-		   if(event.keyCode == 32 && event.target == document.body) {
+		   if((event.keyCode == 32 || event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) && event.target == document.body) {
 			event.preventDefault();
 		   }
 	});
@@ -998,6 +1232,7 @@
 	}
  	
 </script>
+
 </body>
 
 </html>

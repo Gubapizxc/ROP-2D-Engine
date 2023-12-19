@@ -1,0 +1,507 @@
+html{
+	background-color: #404040;
+	}
+	@font-face {
+	  font-family: 'ROP';
+	  src: URL('Rop3-Regular.ttf') format('truetype');
+	}
+	#folde > img {
+    float: left;
+    position: relative;
+	}
+	.dirtPlatform{
+		background-image: url('DirtPlatform.png');
+	}
+	#fold{
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+		width:256px;
+		height:160px;
+		background-color:grey;
+		overflow:hidden;
+		margin:0px;
+
+
+
+		zoom: 400%;
+		-ms-zoom: 4;
+		-webkit-zoom: 4;
+		transform-origin: top left;
+		-moz-transform: scale(4);
+		
+		
+		background-image: url('mansionBackdrop.png');
+		/* IE, only works on <img> tags */
+	   -ms-interpolation-mode: nearest-neighbor;
+	   /* Firefox */
+	   image-rendering: crisp-edges;
+	   /* Chromium + Safari */
+	   image-rendering: pixelated;
+	}
+	
+	#fold.3{
+		zoom: 100%;
+		-ms-zoom: 1;
+		-webkit-zoom: 1;
+		transform-origin: top left;
+		-moz-transform: scale(1);
+	}
+	
+	@-webkit-keyframes playerWalkRight {
+	  0% {
+		background-image: url('Lena.png');
+	  }
+	  32% {
+		background-image: url('Lena.png');
+	  }
+	  33% {
+		background-image: url('LenaStep.png');
+	  }
+	  66% {
+		background-image: url('LenaStep.png');
+	  }
+	  67% {
+		background-image: url('LenaStep1.png');
+	  }
+	  100% {
+		background-image: url('LenaStep1.png');
+	  }
+	}
+	
+	@-webkit-keyframes playerWalkLeft {
+	  0% {
+		background-image: url('LenaLeft.png');
+	  }
+	  32% {
+		background-image: url('LenaLeft.png');
+	  }
+	  33% {
+		background-image: url('LenaLeftStep.png');
+	  }
+	  66% {
+		background-image: url('LenaLeftStep.png');
+	  }
+	  67% {
+		background-image: url('LenaLeftStep1.png');
+	  }
+	  100% {
+		background-image: url('LenaLeftStep1.png');
+	  }
+	}
+	
+	
+    .animationPlayerLookRight{
+		background-image: url('Lena.png');
+	}
+
+	.animationPlayerLookLeft{
+		background-image: url('LenaLeft.png');
+	}
+	
+	.animationPlayerLookRight.playing{
+		-webkit-animation-name: playerWalkRight;
+	    -webkit-animation-duration: 0.3s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: normal;
+	    -webkit-animation-timing-function: alternate;
+	}
+	.animationPlayerLookLeft.playing{
+		-webkit-animation-name: playerWalkLeft;
+	    -webkit-animation-duration: 0.3s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: normal;
+	    -webkit-animation-timing-function: alternate;
+	}
+	
+	#player.animationPlayerLookRight.onAir{
+		background-image: url('LenaStep.png');
+	}
+	
+	#player.animationPlayerLookLeft.onAir{
+		background-image: url('LenaLeftStep.png');
+	}
+	
+	
+	#boxMessage{
+		background-image: url('textBox.png');
+		height: 100%;
+		width: 100%;		
+		margin-top: 2px;
+		margin-left: 2px;
+		image-rendering: pixelated;
+		background-repeat: no-repeat;
+		z-index:9999;
+		height:100%;
+		width:100%;
+		position:absolute;
+	}
+	
+	#dialogPortrait{
+		height: 100%;
+		width: 100%;
+		margin-top: 10px;
+		margin-left: 20px;
+		image-rendering: pixelated;
+		background-repeat: no-repeat;
+		z-index:9998;
+		height:100%;
+		width:100%;
+		position:absolute;
+	}
+	
+	@-webkit-keyframes wallEye {
+	  0% {
+		background-image: url('eye.png');
+	  }
+	  9% {
+		background-image: url('eye.png');
+	  }
+	  10% {
+		background-image: url('eye1.png');
+	  }
+	  24% {
+		background-image: url('eye1.png');
+	  }
+	  25% {
+		background-image: url('eye2.png');
+	  }
+	  30% {
+		background-image: url('eye2.png');
+	  }
+	  31% {
+		background-image: url('eye3.png');
+	  }
+	  40% {
+		background-image: url('eye3.png');
+	  }
+	  41% {
+		background-image: url('eye4.png');
+	  }
+	  50% {
+		background-image: url('eye4.png');
+	  }
+	  51% {
+		background-image: url('eye5.png');
+	  }
+	  60% {
+		background-image: url('eye5.png');
+	  }
+	  61% {
+		background-image: url('eye6.png');
+	  }
+	  80% {
+		background-image: url('eye6.png');
+	  }
+	  81% {
+		background-image: url('eye5.png');
+	  }
+	  100% {
+		background-image: url('eye5.png');
+	  }
+	}
+	
+	@-webkit-keyframes playerAttack {
+	  0% {
+		background-image: url('attackSprite.png');
+	  }
+	  29% {
+		background-image: url('attackSprite.png');
+	  }
+	  30% {
+		background-image: url('attackSprite1.png');
+	  }
+	  44% {
+		background-image: url('attackSprite1.png');
+	  }
+	  45% {
+		background-image: url('attackSprite2.png');
+	  }
+	  64% {
+		background-image: url('attackSprite2.png');
+	  }
+	  65% {
+		background-image: url('attackSprite3.png');
+	  }
+	  100% {
+		background-image: url('attackSprite3.png');
+	  }
+	}
+	
+	@-webkit-keyframes bloodbutterfly {
+	  0% {
+		background-image: url('bloodbutterfly.png');
+	  }
+	  49% {
+		background-image: url('bloodbutterfly.png');
+	  }
+	  50% {
+		background-image: url('bloodbutterfly1.png');
+	  }
+	  100% {
+		background-image: url('bloodbutterfly1.png');
+	  }
+	}
+	
+	@-webkit-keyframes centi {
+	  0% {
+		background-image: url('centi.png');
+	  }
+	  24% {
+		background-image: url('centi.png');
+	  }
+	  25% {
+		background-image: url('centi1.png');
+	  }
+	  49% {
+		background-image: url('centi1.png');
+	  }
+	  50% {
+		background-image: url('centi2.png');
+	  }
+	  74% {
+		background-image: url('centi2.png');
+	  }
+	  75% {
+		background-image: url('centi3.png');
+	  }
+	  100% {
+		background-image: url('centi3.png');
+	  }
+	}
+	
+	@-webkit-keyframes grooving {
+	  0% {
+		background-image: url('grooving.png');
+	  }
+	  49% {
+		background-image: url('grooving.png');
+	  }
+	  50% {
+		background-image: url('grooving1.png');
+	  }
+	  100% {
+		background-image: url('grooving1.png');
+	  }
+	}
+	
+	.groovy.playing{
+		-webkit-animation-name: grooving;
+	    -webkit-animation-duration: 0.3s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: normal;
+	    -webkit-animation-timing-function: linear;
+	}
+	
+	@-webkit-keyframes slug {
+	  0% {
+		background-image: url('slug.png');
+	  }
+	  49% {
+		background-image: url('slug.png');
+	  }
+	  50% {
+		background-image: url('slug1.png');
+	  }
+	  100% {
+		background-image: url('slug1.png');
+	  }
+	}
+	
+	#playerAttack.playing{
+		-webkit-animation-name: playerAttack;
+	    -webkit-animation-duration: 0.1s;
+	    -webkit-animation-iteration-count: 1;
+	    -webkit-animation-direction: normal;
+	    -webkit-animation-timing-function: linear;
+	}
+	
+	.bloodbutterfly.playing{
+		-webkit-animation-name: bloodbutterfly;
+	    -webkit-animation-duration: 0.4s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: alternate;
+	    -webkit-animation-timing-function: slidein;
+		-webkit-transition-timing-function: slidein;
+	}
+	
+	.centipede.playing{
+		-webkit-animation-name: centi;
+	    -webkit-animation-duration: 0.6s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: alternate;
+	    -webkit-animation-timing-function: linear;
+		-webkit-transition-timing-function: linear;
+	}
+	
+	.slug.playing{
+		-webkit-animation-name: slug;
+	    -webkit-animation-duration: 0.6s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: alternate;
+	    -webkit-animation-timing-function: slidein;
+		-webkit-transition-timing-function: slidein;
+	}
+	
+	.wallEye.playing{
+		-webkit-animation-name: wallEye;
+	    -webkit-animation-duration: 6s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: alternate;
+	    -webkit-animation-timing-function: slidein;
+		-webkit-transition-timing-function: slidein;
+	}
+	
+	#playerHurt{
+		background-image: url('playerBloodOverlay.png');
+	}
+	
+	.flipped{
+		-moz-transform: scaleX(-1);
+		-o-transform: scaleX(-1);
+		-webkit-transform: scaleX(-1);
+		transform: scaleX(-1);
+		filter: FlipH;
+		-ms-filter: "FlipH";
+	}
+	.rotated90{
+		-moz-transform: rotate(90deg);
+		-o-transform:  rotate(90deg);
+		-webkit-transform:  rotate(90deg);
+		transform:  rotate(90deg);
+	}
+	
+	.rotated180{
+		-moz-transform: rotate(180deg);
+		-o-transform:  rotate(180deg);
+		-webkit-transform:  rotate(180deg);
+		transform:  rotate(180deg);
+	}
+	
+	.brokenDoor{
+		background-image: url('brokenDoor.png');
+	}
+	
+	.rotated270{
+		-moz-transform: rotate(270deg);
+		-o-transform:  rotate(270deg);
+		-webkit-transform:  rotate(270deg);
+		transform:  rotate(270deg);
+	}
+	.rotated180:not(.flipped){
+		-moz-transform: rotate(180deg) scaleX(-1);
+		-o-transform:  rotate(180deg) scaleX(-1);
+		-webkit-transform:  rotate(180deg) scaleX(-1);
+		transform:  rotate(180deg) scaleX(-1);
+	}
+	.rotated270:not(.flipped){
+		-moz-transform: rotate(270deg)  scaleX(-1);
+		-o-transform:  rotate(270deg)  scaleX(-1);
+		-webkit-transform:  rotate(270deg)  scaleX(-1);
+		transform:  rotate(270deg)  scaleX(-1);
+	}
+	#overlay{
+	    image-rendering: pixelated;
+		background-image: url('shadowMask.png');
+		background-repeat: no-repeat;
+		opacity: 0.6;
+		z-index:999;
+		height:100%;
+		width:100%;
+		position:absolute;
+	}
+	#overlay.gameOver{
+	    image-rendering: pixelated;
+		background-image: url('GameOverScreen.png');
+		background-repeat: no-repeat;
+		opacity: 0.8;
+		z-index:999;
+		height:100%;
+		width:100%;
+		position:absolute;
+	}
+	
+	#boxTitle{
+		font-size: 12px;
+		color: white;
+		top: 75px;
+		left: 20px;
+		position: absolute;
+		font-family: "ROP";
+	}
+	#boxText{
+		font-size: 8px;
+		color: white;
+		top: 95px;
+		left: 30px;
+		width: 150px;
+		height: 100px;
+		font-family: "ROP";
+		position: absolute;
+	}
+	
+	.button{
+		border: 4px solid #ffffff;
+		font-family: "ROP";
+		width: 20vw;
+		height: 20vw;
+		margin-top: 25px;
+		text-align: center;
+		vertical-align: middle;
+		color: white;
+		font-size: 10vw;
+		font-family: "ROP";
+		padding-top: 6vw;
+		float: left;
+		opacity: 0.35;
+		z-index: 99999999;
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+		position: sticky
+	}
+	.spacer{
+		position: sticky
+		user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+		width: 15vw;
+		height: 15vw;
+		float: left;
+		  height: auto;
+		  position: relative;
+	}
+	.disable-dbl-tap-zoom {
+	  touch-action: manipulation;
+	}
+	.zoomPanel{
+		z-index: 99999999;
+		width: 100%; /* Can be in percentage also. */
+		height: auto;
+		margin: 0 auto;
+		padding: 10px;
+		position: relative;
+		opacity: 0.35;
+	} 	
+	.selector{
+		z-index: 999999999;
+		font-family: "ROP";
+		font-size: 2vw;
+		margin-top: 1.5vw;
+		margin-left: 3vw;
+		color: white;
+	}
+	.selector.marginSelector{
+		z-index: 999999999;
+		font-family: "ROP";
+		font-size: 2vw;
+		margin-top: 2.5vw;
+		margin-left: 8vw;
+		color: white;
+	}

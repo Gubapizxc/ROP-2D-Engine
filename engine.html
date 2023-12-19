@@ -631,6 +631,16 @@
 	var isGameOver = false;
 	var isRedirecting = false;
 	var ReturnScreen = "https://gustavo-batista.online/apps/ropEngine/engine.html";
+	var scoreCounters = {
+						shots: 0,
+						kills: 0,
+						breakables: 0,
+						jumps: 0, 
+						x: 0,
+						y: 0,
+						seconds: 0,
+						damageTaken: 0
+						};
 	
 	var firingTimer = 35;
 	var firingTime = 0;
@@ -728,6 +738,10 @@
 		mobileControlCounter = delay;
 	}
 	
+	function checkGoals(){
+	
+	}
+	
 	function RunOnStart(){
 		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 		const butLeft = document.getElementById("buttonLeft");
@@ -813,6 +827,7 @@
 				HandlePlayerMovement();
 				CheckAttackTiming();
 				HandleEnemyActions();
+				checkGoals();
 			}else if(isGameOver){
 				AnimationClassTo("overlay", "gameOver");
 				if(alternateControls["action"] && !isRedirecting){
@@ -976,6 +991,7 @@
 			isGrounded = false;
 			currentlyStandingBlock = null;
 			availableSounds["playerJump"].play();
+			scoreCounters["jumps"]++;
 		  }
 		  if (alternateControls["left"]) {
 		    AnimationClassTo("player", "animationPlayerLookLeft");
@@ -992,7 +1008,10 @@
 		  }else if(!alternateControls["right"] && !alternateControls["left"]){
 			RemovePlaying("player");
 		  }
+		  scoreCounters["x"] = LeftValue;
+		  scoreCounters["y"] = TopValue;
 		  if(alternateControls["action"] && canShoot){
+		    scoreCounters["shots"]++;
 			ClearAudioCache();
 			if(isPlayerFacingRight){
 				toggleAndMove("playerAttack", true, LeftValue + PlayerWidth, TopValue);
@@ -1056,11 +1075,12 @@
 				let objects = document.getElementsByTagName("obj");
 				for(let i = 0; i < objects.length; i++){
 					if(objects[i].id.includes("enemy")){
-						if(objects[i].id.includes("enemyBasic") || objects[i].id.includes("enemyVBasic") || objects[i].id.includes("breakable")){
+						if(objects[i].id.includes("enemyBasic") || objects[i].id.includes("enemyVBasic") && !objects[i].id.includes("breakable")){
 							let hasHit = simpleCheckifIntersect(objects[i].id, "playerAttack");
 							if(hasHit){
 								availableSounds['playerKill'].play();
 								toggleAndMove(objects[i].id, false, 0, 0);
+								scoreCounters["kills"]++;
 							};
 						}
 					}else if(objects[i].id.includes("breakable")){
@@ -1068,6 +1088,7 @@
 							if(hasHit){
 								availableSounds['breakObstacle'].play();
 								toggleAndMove(objects[i].id, false, 0, 0);
+								scoreCounters["breakables"]++;
 							};
 					}
 					continue;
@@ -1146,6 +1167,7 @@
 						isActive(objects[i].id)
 					  ){
 							playerHealth--;
+							scoreCounters["damageTaken"]++;
 							
 							if(playerHealth < 0){ 
 								playerHealth = 0;
@@ -1227,7 +1249,7 @@
 
 
 	function clearTicks(){
-		//console.log("FPS:" + TicksThisSecond);
+		scoreCounters["seconds"]++;
 		TicksThisSecond = 0;
 	}
  	

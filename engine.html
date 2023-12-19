@@ -568,7 +568,7 @@
 	createObject(16,16,100,16,"breakableObstacle2", "transparent", ["groovy", "playing"]);
 	
 	//enemies and npcs
-	createObject(16,16,130,64,"enemyBasic3", "transparent", ["enemy", "centipede", "playing"]);
+	createObject(16,16,130,64,"enemyBasic3", "transparent", ["enemy", "bloodbutterfly", "playing"]);
 	createObject(16,16,130,14,"enemyBasic2", "transparent", ["enemy", "slug", "playing"]);
 	createObject(16,16,130,140,"enemyBasic2.0", "transparent", ["enemy", "slug", "playing", "rotated180"]);
 	createObject(16,16,241,140,"enemyVBasic2", "transparent", ["enemy", "slug", "playing", "rotated270"]);
@@ -639,7 +639,8 @@
 						x: 0,
 						y: 0,
 						seconds: 0,
-						damageTaken: 0
+						damageTaken: 0,
+						dialogsRead: 0
 						};
 	
 	var firingTimer = 35;
@@ -859,6 +860,7 @@
 				}
 			    dialogQueue.splice(0, 1);
 				dialogPause = 20;
+				scoreCounters["dialogsRead"]++;
 			}	
 			if(dialogQueue == null || dialogQueue == undefined || dialogQueue.length < 1) return true;
 			title.innerHTML = dialogQueue[0].title;

@@ -1,0 +1,41 @@
+<html>
+<style>
+    body{
+        opacity: 0.01;
+    }
+    html{
+        background-color: #404040;
+    }
+    @font-face {
+	  font-family: 'ROP';
+	  src: URL('Rop3-Regular.ttf') format('truetype');
+	}
+    
+</style>
+<body></body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>	
+var loc = window.location.pathname;
+var dir = loc.substring(0, loc.lastIndexOf('/')) + "/";
+
+var target = dir + "engine.html";
+var fileextension = ".png";
+$.ajax({
+    //This will retrieve the contents of the folder if the folder is configured as 'browsable'
+    url: dir,
+    success: function (data) {
+        //List all .png file names in the page
+        $(data).find("a:contains(" + fileextension + ")").each(function () {
+            var filename = this.href.substring(this.href.lastIndexOf('/')+1);
+            $("body").append("<img src='" + dir + filename + "'>");
+        });
+        setTimeout(() => {
+            Promise.all(Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; }))).then(() => {
+            window.location.href = target;
+        });
+        }, "200");
+    },
+     
+});
+</script>
+</html>

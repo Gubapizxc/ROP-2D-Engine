@@ -24,6 +24,10 @@
 		overflow:hidden;
 		margin:0px;
 		zoom: 400%;
+		-ms-zoom: 4;
+		-webkit-zoom: 4;
+		transform-origin: top left;
+		-moz-transform: scale(4);
 		background-image: url('mansionBackdrop.png');
 		/* IE, only works on <img> tags */
 	   -ms-interpolation-mode: nearest-neighbor;
@@ -517,7 +521,7 @@
 	
 	var isGameOver = false;
 	var GameOverCounter = 0;
-	var ReturnScreen = "C:/Users/gubap/Desktop/NewRop/engine.html";
+	var ReturnScreen = "https://gustavo-batista.online/apps/ropEngine/engine.html";
 	
 	var firingTimer = 35;
 	var firingTime = 0;

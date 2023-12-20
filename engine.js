@@ -47,13 +47,16 @@
 	var availablePortraits = {
 		placeholder: "dialogPortraitPlaceholder.png",
 		placeholder1: "dialogPortraitPlaceholder1.png",
-		placeholder2: "dialogPortraitPlaceholder2.png"
+		placeholder2: "dialogPortraitPlaceholder2.png",
+		lenaHappyDown: "PortraitLenaHappyDown.png",
+		lenaStumpedDown: "PortraitLenaStumpedDown.png",
+		lenaSeriousUp: "PortraitLenaSeriousUp.png",
 	}
 	
-	var dialogQueue = [{title: "Paulina", message:"Wow, those dialog boxes are pretty cool huh?", portrait: "placeholder", pitch: 1},
-					   {title: "Paulina", message:"And you can advance them too??", portrait: "placeholder2", pitch: 1},
-					   {title: "K.B", message:"Yeah, its pretty interesting.", portrait: "placeholder1", pitch: 0.7},
-					   {title: "Paulina", message:"welp, heads up!", portrait: "placeholder", pitch: 1}];
+	var dialogQueue = [{title: "Paulina", message:"Wow, those dialog boxes are pretty cool huh?", portrait: "lenaHappyDown", pitch: 1},
+					   {title: "Paulina", message:"And you can advance them too??", portrait: "lenaStumpedDown", pitch: 1},
+					   {title: "K.B", message:"Yes, pretty cool, a shame I haven't been drawn yet huh...", portrait: "placeholder1", pitch: 0.7},
+					   {title: "Paulina", message:"welp, heads up!", portrait: "lenaSeriousUp", pitch: 1}];
 	var dialogPause = 0;
 	var currentAnimations = [];
 	
@@ -210,6 +213,9 @@
 		if (isFirefox) {
 		  currentFoldScale = 4;
 		}
+	    if(vw < 1024){
+			currentFoldScale = currentFoldScale*0.3;
+		}
 		if(urlScale != null){
 			currentFoldScale = parseInt(urlScale, 10)/100;
 		}
@@ -268,11 +274,7 @@
 		});
 	
 		
-		if(vw < 1024){
-			currentFoldScale = currentFoldScale*0.5;
-			fold.style.transform = "scale("+ currentFoldScale +")";
-			document.getElementById("zoomPercent").innerHTML = Math.round((currentFoldScale * 100)) + "%";
-		}
+		
 	}
 
 	function Update(){

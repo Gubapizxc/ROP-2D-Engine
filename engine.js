@@ -220,6 +220,7 @@
 		}
 	    if(vw < 1024){
 			currentFoldScale = currentFoldScale*0.3;
+			currentFoldMargin = -350;
 		}
 		if(urlScale != null){
 			currentFoldScale = parseInt(urlScale, 10)/100;
@@ -261,6 +262,19 @@
 			buttonFunction('up', 1000000);
 		});
 		butAction.addEventListener("touchstart", function() {
+			buttonFunction('action', 1000000);
+		});
+		
+		butLeft.addEventListener("touchmove", function() {
+			buttonFunction('left', 1000000);
+		});
+		butRight.addEventListener("touchmove", function() {
+			buttonFunction('right', 1000000);
+		});
+		butUp.addEventListener("touchmove", function() {
+			buttonFunction('up', 1000000);
+		});
+		butAction.addEventListener("touchmove", function() {
 			buttonFunction('action', 1000000);
 		});
 		

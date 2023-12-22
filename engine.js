@@ -1,4 +1,4 @@
-//player related objects
+	//player related objects
 	var PlayerObj = createObject(16,16,10,16,"player", "transparent");
 	createObject(16,16,0,0,"playerHurt", "transparent", "bloodOverlay");
 	makeChildOf("playerHurt", "player");
@@ -41,7 +41,8 @@
 		voice3: new Audio('v3.mp3'),
 		voice4: new Audio('v4.mp3'),
 		voice5: new Audio('v5.mp3'),
-		death: new Audio('death.mp3')
+		death: new Audio('death.mp3'),
+		poing: new Audio('poing.mp3')
 	};
 	
 	var availablePortraits = {
@@ -55,7 +56,7 @@
 	
 	var dialogQueue = [{title: "Paulina", message:"Wow, those dialog boxes are pretty cool huh?", portrait: "lenaHappyDown", pitch: 1},
 					   {title: "Paulina", message:"And you can advance them too??", portrait: "lenaStumpedDown", pitch: 1},
-					   {title: "K.B", message:"Yes, pretty cool, a shame I haven't been drawn yet huh...", portrait: "placeholder1", pitch: 0.7},
+					   {title: "K.B", message:"Yes, pretty cool, a shame I haven't been drawn yet huh...", portrait: "placeholder1", pitch: 0.7 , sfx: "poing"},
 					   {title: "Paulina", message:"welp, heads up!", portrait: "lenaSeriousUp", pitch: 1}];
 	var dialogPause = 0;
 	var currentAnimations = [];
@@ -71,9 +72,13 @@
 	var playerAirMoveMultiplier = 2;
 	var isPlayerFacingRight = true;
 	
+	var currentDialogWordCounter = 0;
+	
 	var mobileControlCounter = 0;
 	
 	var currentFoldScale = 1;
+	
+	var dialogStandardPause = 5;
 	
 	var currentFoldMargin = 0;
 	
@@ -307,24 +312,46 @@
 			let message = document.getElementById("boxText");
 			let textToUse = (dialogQueue.length > 0) ? dialogQueue[0].message.split(" ") : [];
 			dialogPause--;
+			if(dialogPause <= 0)currentDialogWordCounter++;
+			let wordSlice = (currentDialogWordCounter < textToUse.length) ? currentDialogWordCounter : textToUse.length;
+			if(currentDialogWordCounter < textToUse.length && dialogPause <= 0){
+				dialogPause = dialogStandardPause;
+			}
 			if(alternateControls["action"] && dialogPause <= 0){
-				if(dialogQueue.length > 1){
-					let voiceUsed = getRandomInt(6)
-					if(voiceUsed == 0) voiceUsed = 3;
-					availableSounds["voice" + voiceUsed].playbackRate = dialogQueue[1].pitch;
-					availableSounds["voice" + voiceUsed].preservesPitch = false;
-					availableSounds["voice" + voiceUsed].play();
+				if(currentDialogWordCounter < textToUse.length){
+					currentDialogWordCounter = textToUse.length;
+				}else{
+					currentDialogWordCounter = 0;
+					dialogQueue.splice(0, 1);
+					dialogPause = dialogStandardPause*4;
+					scoreCounters["dialogsRead"]++;
+					if(dialogQueue.length > 0 && dialogQueue[0] != null && dialogQueue[0] != undefined){
+						if(dialogQueue[0].sfx != null && dialogQueue[0].sfx != undefined && availableSounds[dialogQueue[0].sfx] != undefined){
+							availableSounds[dialogQueue[0].sfx].play();
+						}
+					}
+					if(dialogQueue.length > 0 && dialogQueue[0].sfx == undefined){
+						let voiceUsed = getRandomInt(6)
+						if(voiceUsed == 0) voiceUsed = 3;
+						availableSounds["voice" + voiceUsed].playbackRate = dialogQueue[0].pitch;
+						availableSounds["voice" + voiceUsed].preservesPitch = false;
+						availableSounds["voice" + voiceUsed].play();
+						
+					}
 				}
-			    dialogQueue.splice(0, 1);
-				dialogPause = 20;
-				scoreCounters["dialogsRead"]++;
-			}	
+			   
+			}else if(alternateControls["action"] && dialogPause <= dialogStandardPause){
+				if(currentDialogWordCounter < textToUse.length){
+					currentDialogWordCounter = textToUse.length;
+				}
+			}				
 			if(dialogQueue == null || dialogQueue == undefined || dialogQueue.length < 1) return true;
 			title.innerHTML = dialogQueue[0].title;
-			message.innerHTML = textToUse.join(" ");
+			message.innerHTML = textToUse.slice(0, wordSlice).join(" ");
 			dialogPortrait.style.backgroundImage = "url("+ availablePortraits[dialogQueue[0].portrait] +")";
 			return true;
 		}else{
+			currentDialogWordCounter = 0;
 			toggleAndMove("boxMessage", false, 0, 0);
 			toggleAndMove("dialogPortrait", false, 0, 0);
 			return false;
@@ -333,7 +360,7 @@
 	
 	function ClearAudioCache(){
 		for (const sound in availableSounds) {
-			availableSounds.onended = function() {};
+			sound.onended = function() {};
 		}
 	}
 	
@@ -709,6 +736,9 @@
 
 	function clearTicks(){
 		scoreCounters["seconds"]++;
+		if(isRedirecting){
+			window.location.href = ReturnScreen + "?scale=" + Math.round(currentFoldScale*100) + "&margin=" + Math.round(currentFoldMargin);
+		}
 		TicksThisSecond = 0;
 	}
  	

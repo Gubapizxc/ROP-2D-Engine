@@ -627,11 +627,7 @@
 						plyrY < objY + objH &&
 						PlayerHeight + plyrY > objY
 					  ){
-						if(plyrX+(PlayerWidth/2) >= objX + (objW/2)){
-							LeftValue += 1;
-						}else{
-							LeftValue -= 1;
-						}
+						
 						 
 						if(plyrY - (PlayerHeight) >= objY){
 							//TopValue += 1;
@@ -640,8 +636,15 @@
 							if(isGrounded == false){
 								isGrounded = true;
 								currentlyStandingBlock = objects[i];
+								continue;
 							}
 							
+						}
+						
+						if(plyrX+(PlayerWidth/2) >= objX + (objW/2)){
+							LeftValue += 1;
+						}else{
+							LeftValue -= 1;
 						}
 					    
 						player.style.top = TopValue+"px";
@@ -651,6 +654,7 @@
 				  
 						if(currentlyStandingBlock != null && isOverCurrentBlock()){
 							player.style.top =  getHeightToBeOnCurrentBlock() + "";
+							continue;
 							}
 						
 				  }

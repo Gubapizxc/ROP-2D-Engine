@@ -633,7 +633,7 @@
 							LeftValue -= 1;
 						}
 						 
-						if(plyrY - (PlayerHeight/2) >= objY - (objH/2)){
+						if(plyrY - (PlayerHeight) >= objY){
 							//TopValue += 1;
 						}else{
 							//TopValue -= 1;

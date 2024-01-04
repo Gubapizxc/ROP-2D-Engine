@@ -13,6 +13,33 @@ html{
 	.dirtPlatform{
 		background-image: url('Assets/DirtPlatform.png');
 	}
+	.dirtPlatform.playing{
+		-webkit-animation-name: platformAnimation;
+	    -webkit-animation-duration: 6s;
+	    -webkit-animation-iteration-count: infinite;
+	    -webkit-animation-direction: normal;
+	    -webkit-animation-timing-function: linear;
+	}
+	@-webkit-keyframes platformAnimation {
+	  0% {
+		margin-top:0px;
+	  }
+	  32% {
+		margin-top:1px;
+	  }
+	  33% {
+		margin-top:2px;
+	  }
+	  66% {
+		margin-top:1px;
+	  }
+	  67% {
+		margin-top:1px;
+	  }
+	  100% {
+		margin-top:0px;
+	  }
+	}
 	#fold{
 		user-select: none;
         -moz-user-select: none;
@@ -382,6 +409,7 @@ html{
 	}
 	
 	.brokenDoor{
+		paddin-top: 4px;
 		background-image: url('Assets/brokenDoor.png');
 	}
 	
@@ -407,8 +435,17 @@ html{
 	    image-rendering: pixelated;
 		background-image: url('Assets/shadowMask.png');
 		background-repeat: no-repeat;
-		opacity: 0.6;
+		opacity: 0.35;
 		z-index:999;
+		height:100%;
+		width:100%;
+		position:absolute;
+	}
+	#overlayMansion{
+	    image-rendering: pixelated;
+		background-image: url('Assets/mansionOverlay.png');
+		background-repeat: no-repeat;
+		z-index:998;
 		height:100%;
 		width:100%;
 		position:absolute;

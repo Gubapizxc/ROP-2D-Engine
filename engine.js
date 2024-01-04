@@ -11,23 +11,23 @@
 	let touchControls = document.getElementById("touchControls");
 	
 	// level design
-	createObject(16,16,216,20,"dirtPlatform1", "transparent", "dirtPlatform");
-	createObject(16,16,236,40,"dirtPlatform2", "transparent", "dirtPlatform");
-	createObject(16,16,180,60,"dirtPlatform3", "transparent", "dirtPlatform");
-	createObject(16,16,130,80,"dirtPlatform4", "transparent", "dirtPlatform");
-	createObject(16,16,80,90,"dirtPlatform4", "transparent", "dirtPlatform");
-	createObject(16,16,64,90,"dirtPlatform4", "transparent", "dirtPlatform");
-	createObject(16,16,48,90,"dirtPlatform4", "transparent", "dirtPlatform");
-	createObject(16,16,16,120,"dirtPlatform4", "transparent", "dirtPlatform");
-	createObject(16,16,64,106,"breakableObstacle", "transparent", "brokenDoor");
-	createObject(16,16,100,16,"breakableObstacle2", "transparent", ["groovy", "playing"]);
+	createObject(16,16,130,20,"dirtPlatform1", "transparent", ["dirtPlatform", "playing"]);
+	createObject(13,10,160,45,"dirtPlatform2", "transparent", "nn");
+	createObject(16,10,180,50,"dirtPlatform3", "transparent", "nn");
+	createObject(16,125,196,144,"wall1", "transparent", "nn");
+	createObject(16,16,114,80,"dirtPlatform4", "transparent", ["dirtPlatform", "playing"]);
+	createObject(16,16,80,90,"dirtPlatform4", "transparent", ["dirtPlatform", "playing"]);
+	createObject(16,16,64,90,"dirtPlatform4", "transparent", ["dirtPlatform", "playing"]);
+	createObject(16,16,48,90,"dirtPlatform4", "transparent", ["dirtPlatform", "playing"]);
+	createObject(16,16,16,120,"dirtPlatform4", "transparent", ["dirtPlatform", "playing"]);
+	createObject(16,16,196,16,"breakableObstacle", "transparent", "brokenDoor");
 	
 	//enemies and npcs
-	createObject(16,16,130,64,"enemyBasic3", "transparent", ["enemy", "bloodbutterfly", "playing"]);
-	createObject(16,16,130,14,"enemyBasic2", "transparent", ["enemy", "slug", "playing"]);
-	createObject(16,16,130,140,"enemyBasic2.0", "transparent", ["enemy", "slug", "playing", "rotated180"]);
-	createObject(16,16,241,140,"enemyVBasic2", "transparent", ["enemy", "slug", "playing", "rotated270"]);
-	createObject(16,16,130,96,"enemyBasic1", "transparent", ["enemy", "wallEye", "playing"]);
+	createObject(16,16,130,64,"enemyBasic3", "transparent", ["enemy", "bloodbutterfly", "playing", "minRange0", "maxRange160"]);
+	createObject(16,16,130,14,"enemyBasic2", "transparent", ["enemy", "slug", "playing", "minRange50", "maxRange200"]);
+	createObject(16,16,130,140,"enemyBasic2.0", "transparent", ["enemy", "bloodbutterfly", "playing"]);
+	createObject(16,16,187,140,"enemyVBasic2", "transparent", ["enemy", "centipede", "playing", "rotated270", "minRange20", "maxRange60"]);
+	createObject(16,16,114,96,"enemyBasic1", "transparent", ["enemy", "wallEye", "playing"]);
 	
 	
 	var availableSounds = {
@@ -419,6 +419,11 @@
 					let enemy = document.getElementById(id);
 					let enemyBasicRange = parseInt(enemy.id.split("enemyBasic").join(""), 10);
 					if(enemyBasicRange <= 1) return;
+					let maxRange = Array.from(enemy.classList).filter(word => word.includes("maxRange"));
+					maxRange = (maxRange == undefined || maxRange.length < 1) ? [(foldWidth + "")] : [maxRange[0].split("maxRange").join("")];
+					let minRange = Array.from(enemy.classList).filter(word => word.includes("minRange"));
+					minRange = (minRange == undefined || minRange.length < 1) ? ["0"] : [minRange[0].split("minRange").join("")];
+					let fWidth = foldWidth;
 					let leftMargin = parseFloat(enemy.style.left.split("px").join(""),10);
 					let objWidth = parseFloat(enemy.style.width.split("px").join(""),10);
 					let movementAmount = getRandomInt(enemyBasicRange);
@@ -426,8 +431,8 @@
 					let isNegative = wasNegative;
 					let deadZoneStart = 10;
 					let deadZoneEnd = 90;
-					let chanceToBeChange = (leftMargin + objWidth)/foldWidth * 100;
-					if(chanceToBeChange > deadZoneStart && chanceToBeChange < deadZoneEnd){
+					let chanceToBeChange = (leftMargin + objWidth)/fWidth * 100;
+					if((chanceToBeChange > deadZoneStart && chanceToBeChange < deadZoneEnd)){
 						if(wasNegative){
 							isNegative = true;
 						}else{
@@ -437,11 +442,16 @@
 						isNegative = (getRandomInt(101) < chanceToBeChange);
 					}
 					if(isNegative != wasNegative){ enemy.classList.toggle("wasNegative"); }
+					
+					if(leftMargin + objWidth > parseFloat(maxRange[0], 10)){ enemy.classList.remove("wasNegative"); isNegative = true; enemy.classList.add("wasNegative");}
+					
+					if(leftMargin < parseFloat(minRange[0], 10)){ enemy.classList.remove("wasNegative"); isNegative = false; }
+					
 					if(!isNegative) flipObj(enemy.id);
 					else unflipObj(enemy.id);
 					leftMargin +=  movementAmount * ((isNegative) ? -1 : 1); 
 					if(leftMargin < 0) enemy.style.left = 0;
-					if(leftMargin + objWidth > foldWidth) leftMargin = foldWidth - objWidth;
+					if(leftMargin + objWidth > fWidth) leftMargin = fWidth - objWidth;
 					
 					enemy.style.left = leftMargin + "px";
 	}
@@ -450,6 +460,11 @@
 					let enemy = document.getElementById(id);
 					let enemyBasicRange = parseInt(enemy.id.split("enemyVBasic").join(""), 10);
 					if(enemyBasicRange <= 1) return;
+					let maxRange = Array.from(enemy.classList).filter(word => word.includes("maxRange"));
+					maxRange = (maxRange == undefined || maxRange.length < 1) ? [(foldWidth + "")] : [maxRange[0].split("maxRange").join("")];
+					let minRange = Array.from(enemy.classList).filter(word => word.includes("minRange"));
+					minRange = (minRange == undefined || minRange.length < 1) ? ["0"] : [minRange[0].split("minRange").join("")];
+					let fHeight = foldHeight;
 					let topMargin = parseFloat(enemy.style.top.split("px").join(""),10);
 					let objHeight = parseFloat(enemy.style.height.split("px").join(""),10);
 					let movementAmount = getRandomInt(enemyBasicRange);
@@ -457,8 +472,8 @@
 					let isNegative = wasNegative;
 					let deadZoneStart = 10;
 					let deadZoneEnd = 90;
-					let chanceToBeChange = (topMargin + objHeight)/foldHeight * 100;
-					if(chanceToBeChange > deadZoneStart && chanceToBeChange < deadZoneEnd){
+					let chanceToBeChange = (topMargin + objHeight)/fHeight * 100;
+					if((chanceToBeChange > deadZoneStart && chanceToBeChange < deadZoneEnd) || topMargin < parseFloat(minRange[0], 10) || topMargin > parseFloat(maxRange[0],10)){
 						if(wasNegative){
 							isNegative = true;
 						}else{
@@ -468,11 +483,16 @@
 						isNegative = (getRandomInt(101) < chanceToBeChange);
 					}
 					if(isNegative != wasNegative){ enemy.classList.toggle("wasNegative"); }
+					
+					if(topMargin < parseFloat(minRange[0], 10)){enemy.classList.remove("wasNegative"); isNegative = false;}
+					
+					if(topMargin > parseFloat(maxRange[0], 10)){enemy.classList.remove("wasNegative"); isNegative = true; enemy.classList.add("wasNegative");  }
+					
 					if(!isNegative) flipObj(enemy.id);
 					else unflipObj(enemy.id);
 					topMargin +=  movementAmount * ((isNegative) ? -1 : 1); 
 					if(topMargin < 0) enemy.style.top = 0;
-					if(topMargin + objHeight > foldHeight) topMargin = foldHeight - objHeight;
+					if(topMargin + objHeight > fHeight) topMargin = fHeight - objHeight;
 					
 					enemy.style.top = topMargin + "px";
 	}
@@ -628,9 +648,19 @@
 						PlayerHeight + plyrY > objY
 					  ){
 						
-						 
+						 var hasColidedWall = false; 
+						
+						
+						if(plyrX+(PlayerWidth/2) >= objX + (objW/2)){
+							if(objects[i].id.includes("wall")){  LeftValue = objX + objW; hasColidedWall = true; }
+							LeftValue += 1;
+						}else{
+							if(objects[i].id.includes("wall")){  LeftValue = objX - PlayerWidth; hasColidedWall = true; }
+							LeftValue -= 1;
+						}
+						
 						if(plyrY - (PlayerHeight) >= objY){
-							//TopValue += 1;
+							if(objects[i].id.includes("wall") && !hasColidedWall ){  TopValue = objY + objH; playerVerticalSpeed = 0;  }
 						}else{
 							//TopValue -= 1;
 							if(isGrounded == false){
@@ -639,12 +669,6 @@
 								continue;
 							}
 							
-						}
-						
-						if(plyrX+(PlayerWidth/2) >= objX + (objW/2)){
-							LeftValue += 1;
-						}else{
-							LeftValue -= 1;
 						}
 					    
 						player.style.top = TopValue+"px";

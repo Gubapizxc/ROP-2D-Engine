@@ -31,27 +31,27 @@
 	
 	
 	var availableSounds = {
-		playerAttack: new Audio('shot.mp3'),
-		playerJump: new Audio('jump.mp3'),
-		playerHurt: new Audio('hurt.mp3'),
-		playerKill: new Audio('kill.mp3'),
-		breakObstacle: new Audio('breakObstacle.mp3'),
-		voice1: new Audio('v1.mp3'),
-		voice2: new Audio('v2.mp3'),
-		voice3: new Audio('v3.mp3'),
-		voice4: new Audio('v4.mp3'),
-		voice5: new Audio('v5.mp3'),
-		death: new Audio('death.mp3'),
-		poing: new Audio('poing.mp3')
+		playerAttack: new Audio('Assets/shot.mp3'),
+		playerJump: new Audio('Assets/jump.mp3'),
+		playerHurt: new Audio('Assets/hurt.mp3'),
+		playerKill: new Audio('Assets/kill.mp3'),
+		breakObstacle: new Audio('Assets/breakObstacle.mp3'),
+		voice1: new Audio('Assets/v1.mp3'),
+		voice2: new Audio('Assets/v2.mp3'),
+		voice3: new Audio('Assets/v3.mp3'),
+		voice4: new Audio('Assets/v4.mp3'),
+		voice5: new Audio('Assets/v5.mp3'),
+		death: new Audio('Assets/death.mp3'),
+		poing: new Audio('Assets/poing.mp3')
 	};
 	
 	var availablePortraits = {
-		placeholder: "dialogPortraitPlaceholder.png",
-		placeholder1: "dialogPortraitPlaceholder1.png",
-		placeholder2: "dialogPortraitPlaceholder2.png",
-		lenaHappyDown: "PortraitLenaHappyDown.png",
-		lenaStumpedDown: "PortraitLenaStumpedDown.png",
-		lenaSeriousUp: "PortraitLenaSeriousUp.png",
+		placeholder: "Assets/dialogPortraitPlaceholder.png",
+		placeholder1: "Assets/dialogPortraitPlaceholder1.png",
+		placeholder2: "Assets/dialogPortraitPlaceholder2.png",
+		lenaHappyDown: "Assets/PortraitLenaHappyDown.png",
+		lenaStumpedDown: "Assets/PortraitLenaStumpedDown.png",
+		lenaSeriousUp: "Assets/PortraitLenaSeriousUp.png",
 	}
 	
 	var dialogQueue = [{title: "Paulina", message:"Wow, those dialog boxes are pretty cool huh?", portrait: "lenaHappyDown", pitch: 1},

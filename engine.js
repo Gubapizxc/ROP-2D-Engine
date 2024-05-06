@@ -93,7 +93,7 @@
 	
 	var isGameOver = false;
 	var isRedirecting = false;
-	var ReturnScreen = "https://gustavo-batista.online/apps/ropEngine/engine.html";
+	var ReturnScreen = "/apps/ropEngine/engine.html";
 	var scoreCounters = {
 						shots: 0,
 						kills: 0,
